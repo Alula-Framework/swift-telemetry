@@ -1,0 +1,109 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test (Swift 6.3.3)
+    runs-on: ubuntu-latest
+    container: swift:6.3.3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build (this package's warnings are errors)
+        env:
+          TELEMETRY_STRICT_WARNINGS: "1"
+        run: swift build
+
+      - name: Test
+        run: swift test
+
+      # Typed events promise refusals — a measurement that is not a number, a
+      # tag that is not a tag, a field from another event, a malformed name.
+      # A unit test cannot hold a promise that something does not compile.
+      - name: Type errors are compile errors
+        run: ./CI/check-compile-errors.sh
+
+  # 16 threads emitting while 4 attach and detach, for five seconds, under
+  # ThreadSanitizer — and the detach guarantee with it. A report fails the
+  # job whatever the exit code says. TelemetryCore locks with pthread
+  # mutexes rather than Synchronization.Mutex for this job's sake: TSan
+  # cannot see Mutex's handoff on Linux (DECISIONS.md, T2).
+  tsan:
+    name: ThreadSanitizer
+    runs-on: ubuntu-latest
+    container: swift:6.3.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stress, detach guarantee, and the rest of the suite
+        env:
+          TELEMETRY_STRESS_SECONDS: "5"
+        # bash, and pipefail: a container job's default shell is sh, and the
+        # tee would otherwise hide a failing test run.
+        shell: bash
+        run: |
+          set -o pipefail
+          swift test --sanitize=thread 2>&1 | tee tsan.log
+          if grep -q "WARNING: ThreadSanitizer" tsan.log; then
+            echo "::error::ThreadSanitizer reported a race"
+            exit 1
+          fi
+
+  # Zero allocations on every emit path, enforced. Latency is printed but not
+  # enforced here: a 2 ns line cannot be held on a shared runner, so it is a
+  # release gate on a quiet machine — `swift run -c release
+  # TelemetryBenchmarks` in Benchmarks/, which exits non-zero on a miss.
+  benchmarks:
+    name: Benchmarks (allocations enforced)
+    runs-on: ubuntu-latest
+    container: swift:6.3.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run
+        working-directory: Benchmarks
+        run: swift run -c release TelemetryBenchmarks --no-latency
+
+  docs:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    container: swift:6.3.3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate documentation (warnings are errors)
+        env:
+          TELEMETRY_BUILD_DOCS: "1"
+        run: |
+          mkdir -p ./docs
+          for target in TelemetryCore TelemetryMacros TelemetryTesting; do
+            echo "::group::$target"
+            swift package --allow-writing-to-directory "./docs/$target" \
+              generate-documentation --target "$target" \
+              --warnings-as-errors --output-path "./docs/$target"
+            echo "::endgroup::"
+          done
+
+  macos:
+    name: Build and test on macOS
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      # swiftly: this package declares swift-tools-version 6.3, and
+      # swift-actions/setup-swift only indexes up to 6.2.
+      - name: Install Swift
+        run: |
+          curl -fsSL -o swiftly.pkg https://download.swift.org/swiftly/darwin/swiftly.pkg
+          installer -pkg swiftly.pkg -target CurrentUserHomeDirectory
+          "$HOME/.swiftly/bin/swiftly" init --quiet-shell-followup --assume-yes --skip-install
+          . "$HOME/.swiftly/env.sh"
+          swiftly install 6.3.3 --use --assume-yes
+          echo "$HOME/.swiftly/bin" >> "$GITHUB_PATH"
+      - name: Test
+        run: swift test
