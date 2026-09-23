@@ -13,10 +13,10 @@ extension CoreTests {
     struct EventNameTests {
         @Test("the grammar: dot-separated segments of [a-z][a-z0-9_]*")
         func grammar() {
-            for valid in ["a", "flight.http.request", "hangar.pool_checkout", "x1.y_2"] {
+            for valid in ["a", "alula.http.request", "hangar.pool_checkout", "x1.y_2"] {
                 #expect(EventName.isValid(valid), "\(valid)")
             }
-            for invalid in ["", "Flight", "a..b", ".a", "a.", "1a", "a-b", "a.B", "a b"] {
+            for invalid in ["", "Alula", "a..b", ".a", "a.", "1a", "a-b", "a.B", "a b"] {
                 #expect(!EventName.isValid(invalid), "\(invalid)")
             }
             #expect(throws: EventNameError.self) { try EventName(validating: "Bad.Name") }
@@ -24,12 +24,12 @@ extension CoreTests {
 
         @Test("prefixes match whole segments")
         func prefix() {
-            let name: EventName = "flight.http.request"
-            #expect(name.hasPrefix("flight"))
-            #expect(name.hasPrefix("flight.http"))
-            #expect(name.hasPrefix("flight.http.request"))
-            #expect(!name.hasPrefix("flight.htt"))
-            #expect(!EventName("flight.https").hasPrefix("flight.http"))
+            let name: EventName = "alula.http.request"
+            #expect(name.hasPrefix("alula"))
+            #expect(name.hasPrefix("alula.http"))
+            #expect(name.hasPrefix("alula.http.request"))
+            #expect(!name.hasPrefix("alula.htt"))
+            #expect(!EventName("alula.https").hasPrefix("alula.http"))
         }
     }
 

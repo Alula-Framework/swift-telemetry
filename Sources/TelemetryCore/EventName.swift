@@ -1,4 +1,4 @@
-/// A validated, dot-separated event name: `flight.sessions.created`,
+/// A validated, dot-separated event name: `alula.sessions.created`,
 /// `hangar.query.stop`.
 ///
 /// Each segment matches `[a-z][a-z0-9_]*`. The `@TelemetryEvent` macro
@@ -9,8 +9,8 @@
 public struct EventName: Sendable, Hashable, CustomStringConvertible, ExpressibleByStringLiteral {
     public let description: String
     /// The name split on `.`, kept so prefix matching is segment-wise:
-    /// `flight.http` is a prefix of `flight.http.request`, not of
-    /// `flight.https`.
+    /// `alula.http` is a prefix of `alula.http.request`, not of
+    /// `alula.https`.
     public let segments: [Substring]
 
     /// A name known to be valid — a literal the macro already checked, or

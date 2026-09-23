@@ -226,8 +226,8 @@ public struct UnexpectedEmission: Error, CustomStringConvertible {
 protocol AnySink: AnyObject, Sendable {
     func offer(_ item: any Sendable)
     /// An event from the shared handler for `prefix`. A sink takes it only
-    /// from its own prefix's handler: with captures of `flight` and
-    /// `flight.apns` both live, the event reaches both handlers, and each
+    /// from its own prefix's handler: with captures of `alula` and
+    /// `alula.apns` both live, the event reaches both handlers, and each
     /// sink must count it once.
     func offer(erased event: borrowing AnyEvent, from prefix: EventName)
 }

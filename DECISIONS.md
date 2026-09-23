@@ -2,8 +2,8 @@
 
 The judgement calls behind this package: each with the alternatives it was
 chosen over, and what reversing it would cost. Newest first. This package
-began inside Flight, and that history (the original spec, the first audit)
-is in Flight's DECISIONS.md, D42 and D43.
+began inside Alula, and that history (the original spec, the first audit)
+is in Alula's DECISIONS.md, D42 and D43.
 
 ---
 
@@ -27,7 +27,7 @@ a change that breaks one is wrong even if it compiles:
 
 ## T3 — Where the spec was departed from, and why
 
-The spec is swift-telemetry's original design document, from Flight D42.
+The spec is swift-telemetry's original design document, from Alula D42.
 
 1. **`SpanHandle` is `~Copyable`, not `~Escapable`.** The spec allowed this
    fallback if it asked for a reproducer. On Swift 6.3.3:
@@ -126,9 +126,9 @@ warning naming both types.
 
 ## T1 — Its own package, and three modules
 
-**Chosen.** swift-telemetry is a package of its own, outside Flight. A
+**Chosen.** swift-telemetry is a package of its own, outside Alula. A
 library that emits (Hangar, a driver, anything) depends on it and on
-nothing else. Flight depends on it too, and keeps what is Flight's: the
+nothing else. Alula depends on it too, and keeps what is Alula's: the
 bridges to swift-metrics, swift-distributed-tracing and swift-log, and the
 module that wires them from configuration.
 
@@ -147,11 +147,11 @@ site writes (`Telemetry.emit`), and a module sharing a type's name breaks
 qualified lookup. swift-changeset's module is `Changesets` for the same
 reason.
 
-**Why.** An independent audit of Flight 0.34 found that keeping the neutral
-core inside the flight package would make every library that emits a
-Flight dependent. Hangar is deliberately usable without Flight. The core
+**Why.** An independent audit of Alula 0.34 found that keeping the neutral
+core inside the alula package would make every library that emits a
+Alula dependent. Hangar is deliberately usable without Alula. The core
 depended only on swift-service-context, so extracting it was mechanical;
-doing it before anyone outside Flight adopted it made it free.
+doing it before anyone outside Alula adopted it made it free.
 
-**Cost of reversing.** Folding it back into Flight means one product and
-three renames, and every independent adopter would have to take on Flight.
+**Cost of reversing.** Folding it back into Alula means one product and
+three renames, and every independent adopter would have to take on Alula.

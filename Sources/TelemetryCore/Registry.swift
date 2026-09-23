@@ -56,7 +56,7 @@ enum Registry {
     /// Every slot created, and the prefixes of every erased handler and span
     /// observer attached. A slot's erased and observer bits are set only when
     /// one of those prefixes matches a name the slot answers to — so a
-    /// narrow prefix, `flight.sessions`, costs nothing to `hangar.query`.
+    /// narrow prefix, `alula.sessions`, costs nothing to `hangar.query`.
     ///
     /// A slot enrolls when it is created (the first emit or attach of its
     /// type) and takes its bits from the prefixes as they stand, under the

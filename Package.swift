@@ -2,10 +2,10 @@
 // Swift Telemetry — typed events and spans: libraries say what happened,
 // applications decide what it becomes. Modelled on Elixir's :telemetry.
 //
-// Neutral by design. Nothing here knows about Flight, Hangar or any backend:
+// Neutral by design. Nothing here knows about Alula, Hangar or any backend:
 // a library depends on TelemetryCore to emit, and never on a framework.
 // Reporting to swift-metrics, swift-distributed-tracing and swift-log lives
-// with whoever composes the application — Flight's FlightTelemetryBridges,
+// with whoever composes the application — Alula's AlulaTelemetryBridges,
 // for one.
 import CompilerPluginSupport
 import PackageDescription

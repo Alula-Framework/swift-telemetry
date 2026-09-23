@@ -33,7 +33,7 @@ no swift-syntax either. `TelemetryMacros` adds `@TelemetryEvent`,
 `@TelemetrySpan` and `@TelemetryFields`, and re-exports this module.
 `TelemetryTesting` captures events in tests. Reporting to a metrics,
 tracing or logging backend belongs to whoever composes the application;
-Flight's `FlightTelemetryBridges` is one such composer. The package README
+Alula's `AlulaTelemetryBridges` is one such composer. The package README
 is the guide.
 
 ## Topics

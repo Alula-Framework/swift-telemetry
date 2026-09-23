@@ -7,7 +7,7 @@ import Synchronization
 /// A caseless enum, so the type is a name and nothing more:
 ///
 /// ```swift
-/// @TelemetryEvent("flight.sessions.created")
+/// @TelemetryEvent("alula.sessions.created")
 /// public enum SessionCreated {}
 ///
 /// @TelemetryEvent("hangar.query")

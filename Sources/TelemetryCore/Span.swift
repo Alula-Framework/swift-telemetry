@@ -4,7 +4,7 @@ import Synchronization
 /// An operation with a duration: `start`, then `stop` or `exception`.
 ///
 /// ```swift
-/// @TelemetrySpan("flight.http.request")
+/// @TelemetrySpan("alula.http.request")
 /// public enum HTTPRequestSpan {
 ///     public struct Metadata { public var method: String; public var route: String }
 ///     public struct StopMetadata { public var status: Int = 0 }
@@ -18,7 +18,7 @@ import Synchronization
 /// ```
 ///
 /// Each phase is a full ``TelemetryEvent`` with its own name
-/// (`flight.http.request.start`, `.stop`, `.exception`) and its own handlers,
+/// (`alula.http.request.start`, `.stop`, `.exception`) and its own handlers,
 /// so a metric targets a phase directly: `Counter(HTTPRequestSpan.Stop.self)`.
 /// `@TelemetrySpan` writes the three phase types and this conformance; both
 /// can be written by hand.

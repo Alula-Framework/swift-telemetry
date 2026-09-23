@@ -18,7 +18,7 @@ measurement that isn't a number, a metric tag that isn't a tag, or a tag
 taken from another event's fields fails to compile.
 
 ```swift
-.package(url: "https://github.com/Flight-Framework/swift-telemetry.git", from: "0.1.0"),
+.package(url: "https://github.com/Alula-Framework/swift-telemetry.git", from: "0.1.0"),
 
 .product(name: "TelemetryCore", package: "swift-telemetry")     // emit and attach; swift-service-context only
 .product(name: "TelemetryMacros", package: "swift-telemetry")   // @TelemetryEvent, @TelemetrySpan; re-exports the core
@@ -33,8 +33,8 @@ macOS 15, or Linux.
 
 **Reporting belongs to the application.** Turning events into
 swift-metrics metrics, swift-distributed-tracing spans or swift-log lines
-is the job of whoever composes the application. [Flight](https://github.com/Flight-Framework/flight)'s
-`FlightTelemetryBridges` is one such composer, with a swift-metrics
+is the job of whoever composes the application. [Alula](https://github.com/Alula-Framework/alula)'s
+`AlulaTelemetryBridges` is one such composer, with a swift-metrics
 reporter, a tracing observer and a log bridge. Anything else can attach
 handlers the same way (see [Reporting](#reporting)).
 
@@ -195,7 +195,7 @@ for metric in metrics {
 
 `MetricDescriptor` carries what a backend needs: the name, kind, unit, tag
 names and bucket hints. A reporter translates, and leaves aggregation to
-the backend. Flight's `SwiftMetricsReporter` maps definitions onto
+the backend. Alula's `SwiftMetricsReporter` maps definitions onto
 swift-metrics, with a cap on tag combinations; its source is a complete
 example.
 
@@ -306,7 +306,7 @@ let token = try Telemetry.observeSpans(prefix: "hangar", id: "tracing", MyObserv
 
 Observed spans run their bodies inside a child `ServiceContext` carrying
 the span's id (`context.telemetrySpan`), so any logger's metadata provider
-can stamp it on log lines. Flight's bridges include a
+can stamp it on log lines. Alula's bridges include a
 swift-distributed-tracing observer and a log metadata provider built on
 exactly this.
 
@@ -407,7 +407,7 @@ How it gets there:
 - Keep metadata low-cardinality. Put anything unbounded (SQL, ids, user
   input) in an optional field, filled only when a setting asks for it.
 - Publish metric definitions (`[TelemetryMetric]`) for your events, so an
-  application can report them without writing its own. In Flight, a module
+  application can report them without writing its own. In Alula, a module
   that holds them contributes them automatically.
 
 ## Not here
