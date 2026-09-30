@@ -40,7 +40,9 @@ handlers the same way (see [Reporting](#reporting)).
 
 ## Declaring an event
 
-An event is a caseless enum, named for what happened:
+An event is a caseless enum, named for what happened. The examples here
+use a database library's query event, `hangar.query`; it illustrates the
+shape, and Hangar itself emits no telemetry today.
 
 ```swift
 @TelemetryEvent("hangar.query")

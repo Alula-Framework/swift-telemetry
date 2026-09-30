@@ -59,8 +59,6 @@ public macro TelemetryEvent(_ name: StaticString) =
 public macro TelemetrySpan(_ name: StaticString, kind: TelemetrySpanKind = .internal) =
     #externalMacro(module: "TelemetryMacrosImpl", type: "TelemetrySpanMacro")
 
-// alula:not-a-component — the `init` is a fields struct's memberwise
-// initializer; nothing here is composed.
 /// Makes a struct's stored properties an event's metadata.
 ///
 /// `@TelemetryEvent` and `@TelemetrySpan` apply it to their nested
@@ -72,8 +70,6 @@ public macro TelemetrySpan(_ name: StaticString, kind: TelemetrySpanKind = .inte
 public macro TelemetryFields() =
     #externalMacro(module: "TelemetryMacrosImpl", type: "TelemetryFieldsMacro")
 
-// alula:not-a-component — the `init` is a fields struct's memberwise
-// initializer; nothing here is composed.
 /// Makes a struct's stored properties an event's measurements — the numbers
 /// metrics aggregate. Each property must be a `TelemetryMeasurement`: an
 /// integer, a `Double`, or a `Duration`.
